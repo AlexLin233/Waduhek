@@ -16,6 +16,7 @@ var pipes = [];
 var gapStart = game.rnd.integerInRange(1, 5);
 var balloons = [];
 var weights = [];
+var gold = [];
 var gameGravity = 130;
 var gapSize = 152;//这个空隙有多大
 var gapMargin = 50;
@@ -33,14 +34,14 @@ function preload() {
   game.load.image("playerImg","../assets/jamesBond.gif");
   game.load.image("bg","../assets/8.jpg");
   game.load.image("playerImg2","../assets/2a.png");
-  game.load.image("playerImg3","../assets/18.png");
+  game.load.image("playerImg3","../assets/31.png");
   game.load.image("playerImg4","../assets/4.png");
   game.load.audio("score", "../assets/point.ogg");
   game.load.image("pipeBlock","../assets/pipe.png");
-  game.load.image("balloons","../assets/balloons.png");
-  game.load.image("weight","../assets/weight.png")
+  game.load.image("balloons","../assets/32.png");
+  game.load.image("weight","../assets/33.png")
   game.load.image("pipeEndHeight","../assets/pipe-end.png")
-
+  game.load.image("gold","../assets/34.png")
 
 }
 
@@ -51,7 +52,7 @@ function create() {
     // set the background colour of the scene
   //game.stage.setBackgroundColor("#a8f7c2");
   game.add.tileSprite(0,0,790,400,'bg')
-  game.add.text(338,175,"比个心💗",{font:"25px Arial", fill:"red"});
+  game.add.text(338,175,"比个心💗",{font:"24px Arial", fill:"red"});
   // game.add.sprite(20,20,"playerImg");
   // game.add.sprite(20,360,"playerImg");
   // game.add.sprite(740,360,"playerImg");
@@ -94,9 +95,10 @@ function update() {
      gameOver();
    }
    //player.rotation += 0.03;
-   player.rotation = Math.atan(player.body.velocity.y / 200);
+   player.rotation = Math.atan(player.body.velocity.y /300);
    checkBonus(balloons, -0.10);
    checkBonus(weights, 0.25);
+   checkBonus(gold,0);
 }
 // function checkBonus(bonusArray, bonusEffect) {
 //   bonusEffect *= (rnd.integerInRange(10, 50));
@@ -203,6 +205,13 @@ function generateWeight(){
   bonus.body.velocity.x = - 200;
   bonus.body.velocity.y = - game.rnd.integerInRange(60,100);
  }
+ function generateGold(){
+   var bonus = game.add.sprite(width, height, "gold");
+   gold.push(bonus);
+   game.physics.arcade.enable(bonus);
+   bonus.body.velocity.x = - 200;
+   bonus.body.velocity.y = - game.rnd.integerInRange(60,100);
+  }
 
 function checkBonus(bonusArray, bonusEffect) {
   for(var i=bonusArray.length - 1; i>=0; i--){
@@ -210,16 +219,20 @@ function checkBonus(bonusArray, bonusEffect) {
       bonusArray[i].destroy();
       bonusArray.splice(i,1);
       changeGravity(bonusEffect * game.rnd.integerInRange(5,30));
+      changeScore();
     });
   }
 }
 function generate(){
-  var x = game.rnd.integerInRange(1,25);
+  var x = game.rnd.integerInRange(1,40);
   if (x === 1){
     generateBalloons();
   }
   else if (x === 2){
     generateWeight();
+  }
+  else if (x === 3){
+    generateGold();
   }
   else {
     generatePipe();
