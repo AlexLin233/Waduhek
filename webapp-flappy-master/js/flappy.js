@@ -51,7 +51,7 @@ function create() {
     // set the background colour of the scene
   //game.stage.setBackgroundColor("#a8f7c2");
   game.add.tileSprite(0,0,790,400,'bg')
-  game.add.text(338,175,"比个心💗",{font:"25px Arial", fill:"red"});
+  game.add.text(338,175,"比个心💗",{font:"22px Arial", fill:"red"});
   // game.add.sprite(20,20,"playerImg");
   // game.add.sprite(20,360,"playerImg");
   // game.add.sprite(740,360,"playerImg");
