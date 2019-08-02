@@ -1,0 +1,21 @@
+#nmd {
+  color: grey;font-size: 50px; font-style: italic; font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+#p{
+  color:orange;font-size: 30px;
+}
+#xdd {
+  color:blue;font-size: 30px;
+}
+#gameLink{
+  font-size: 30px;
+}
+.score {    color: green;font-size: 22px;
+}
+.gold {    color: gold;font-size: 22px;
+}
+body{
+  background-image: url(14.jpg);
+}
+#small{
+}
