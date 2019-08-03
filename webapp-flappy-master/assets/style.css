@@ -10,9 +10,9 @@
 #gameLink{
   font-size: 30px;
 }
-.score {    color: green;font-size: 22px;
+.score {    color: green;font-size: 24px;
 }
-.gold {    color: gold;font-size: 22px;
+.gold {    color: brown;font-size: 22px;
 }
 body{
   background-image: url(14.jpg);
