@@ -14,9 +14,10 @@ var labelScore;
 var player;
 var pipes = [];
 var gapStart = game.rnd.integerInRange(1, 5);
-var balloons = [];
-var weights = [];
+var emerald = [];
+var endpearl = [];
 var gold = [];
+var tnt = [];
 var gameGravity = 130;
 var gapSize = 152;//这个空隙有多大
 var gapMargin = 50;
@@ -38,10 +39,11 @@ function preload() {
   game.load.image("playerImg4","../assets/4.png");
   game.load.audio("score", "../assets/point.ogg");
   game.load.image("pipeBlock","../assets/pipe.png");
-  game.load.image("balloons","../assets/32.png");
-  game.load.image("weight","../assets/33.png")
+  game.load.image("emerald","../assets/32.png");
+  game.load.image("endpearl","../assets/33.png")
   game.load.image("pipeEndHeight","../assets/pipe-end.png")
   game.load.image("gold","../assets/34.png")
+  game.load.image("tnt","../assets/35.png")
 
 }
 
@@ -65,9 +67,9 @@ function create() {
       .onDown.add(spaceHandler,playerJump);
   labelScore = game.add.text(60,60,"0")
   player = game.add.sprite(40,100,"playerImg3");
-  game.input
-      .keyboard.addKey(Phaser.Keyboard.RIGHT)
-      .onDown.add(moveRight);
+  // game.input
+  //     .keyboard.addKey(Phaser.Keyboard.RIGHT)
+  //     .onDown.add(moveRight);
   //game.input.keyboard.addKey(Phaser.Keyboard.RIGHT).onDown.add(moveRight);
   //game.input.keyboard.addKey(Phaser.Keyboard.LEFT).onDown.add(moveLeft);
   //game.input.keyboard.addKey(Phaser.Keyboard.UP).onDown.add(moveUp);
@@ -96,24 +98,11 @@ function update() {
    }
    //player.rotation += 0.03;
    player.rotation = Math.atan(player.body.velocity.y /300);
-   checkBonus(balloons, -0.10);
-   checkBonus(weights, 0.25);
+   checkBonus(emerald, -0.15);
+   checkBonus(endpearl, 0.30);
    checkBonus(gold,0);
+   checkBonus2(tnt,0);
 }
-// function checkBonus(bonusArray, bonusEffect) {
-//   bonusEffect *= (rnd.integerInRange(10, 50));
-//  // Step backwards in the array to avoid index errors from splice
-//  for(var i=0; i<bonusArray.length; i--){
-//    game.physics.arcade.overlap(player, bonusArray[i], function(){
-//      // destroy sprite
-//      bonusArray[i].destroy();
-//      // remove element from array
-//      bonusArray.splice(i, 1);
-//      // apply the bonus effect
-//      changeGravity(bonusEffect);
-//    });
-//   }
-// }
 
 function gameOver(){
   score = 0;
@@ -137,31 +126,30 @@ function changeScore(){
   labelScore.setText(score.toString());
 
 }
-function moveRight(){
-  player.x = player.x + 10;
+
+function changeScore2(){
+  score = score - 3; //score++ or score +=
+  labelScore.setText(score.toString());
+
 }
-function moveLeft() {
-  player.x = player.x - 10;
-}
-function moveUp() {
-  player.y = player.y - 10;
-}
-function moveDown() {
-  player.y = player.y + 10;
-}
+// function moveRight(){
+//   player.x = player.x + 10;
+// }
+// function moveLeft() {
+//   player.x = player.x - 10;
+// }
+// function moveUp() {
+//   player.y = player.y - 10;
+// }
+// function moveDown() {
+//   player.y = player.y + 10;
+// }
 function addPipeBlock(x, y) {
   var pipeBlock = game.add.sprite(x,y,"pipeBlock");
   pipes.push(pipeBlock);
   game.physics.arcade.enable(pipeBlock);
   pipeBlock.body.velocity.x = -gameSpeed;
 }
-// function generatePipe() {
-//   var gap = game.rnd.integerInRange(1 ,5);
-//   for (var count = 0; count < 8; count++) {
-//     if (count != gap && count != gap+1) {
-//       addPipeBlock(750, count * 50);        }    }
-//       changeScore();
-//     }
 
 function generatePipe() {
   var gapStart = game.rnd.integerInRange(gapMargin, height - gapSize - gapMargin);
@@ -186,26 +174,37 @@ function addPipeEnd(x, y) {
 function playerJump() {
   player.body.velocity.y  = -jumpPower
 }
+
 function changeGravity(g) {
   gameGravity += g;
   player.body.gravity.y = gameGravity;
 }
 
-function generateBalloons(){
-  var bonus = game.add.sprite(width, height, "balloons");
-  balloons.push(bonus);
+function generateEmerald(){
+  var bonus = game.add.sprite(width, height, "emerald");
+  emerald.push(bonus);
   game.physics.arcade.enable(bonus);
   bonus.body.velocity.x = - 200;
   bonus.body.velocity.y = - game.rnd.integerInRange(60, 100);
 }
-function generateWeight(){
-  var bonus = game.add.sprite(width, height, "weight");
-  weights.push(bonus);
+
+function generateEndpearl(){
+  var bonus = game.add.sprite(width, height, "endpearl");
+  endpearl.push(bonus);
   game.physics.arcade.enable(bonus);
   bonus.body.velocity.x = - 200;
   bonus.body.velocity.y = - game.rnd.integerInRange(60,100);
  }
- function generateGold(){
+
+ function generateTnt(){
+    var bonus = game.add.sprite(width, height, "tnt");
+    tnt.push(bonus);
+    game.physics.arcade.enable(bonus);
+    bonus.body.velocity.x = - 200;
+    bonus.body.velocity.y = - game.rnd.integerInRange(60,100);
+   }
+
+function generateGold(){
    var bonus = game.add.sprite(width, height, "gold");
    gold.push(bonus);
    game.physics.arcade.enable(bonus);
@@ -218,21 +217,33 @@ function checkBonus(bonusArray, bonusEffect) {
     game.physics.arcade.overlap(player,bonusArray[i], function(){
       bonusArray[i].destroy();
       bonusArray.splice(i,1);
-      changeGravity(bonusEffect * game.rnd.integerInRange(5,30));
+      changeGravity(bonusEffect * game.rnd.integerInRange(5,50));
       changeScore();
     });
   }
 }
+function checkBonus2(bonusArray, bonusEffect) {
+  for(var i=bonusArray.length - 1; i>=0; i--){
+    game.physics.arcade.overlap(player,bonusArray[i], function(){
+      bonusArray[i].destroy();
+      bonusArray.splice(i,1);
+      changeScore2();
+    });
+  }
+}
 function generate(){
-  var x = game.rnd.integerInRange(1,40);
+  var x = game.rnd.integerInRange(1,30);
   if (x === 1){
-    generateBalloons();
+    generateEmerald();
   }
   else if (x === 2){
-    generateWeight();
+    generateEndpearl();
   }
   else if (x === 3){
     generateGold();
+  }
+  else if (x === 4){
+    generateTnt();
   }
   else {
     generatePipe();
